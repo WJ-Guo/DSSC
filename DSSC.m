@@ -63,24 +63,24 @@ num = size(data,1);
 % search knn for every points
 knn = 40;
 find_k = 7;
-max_time = 2; % ÓÃÒÔÅĞ¶ÏÊÇ·ñÎªÁÚ½üÈº
+max_time = 2; % ç”¨ä»¥åˆ¤æ–­æ˜¯å¦ä¸ºé‚»è¿‘ç¾¤
 max_nei = 10;
 num_k = knn + 1 ;  %knn+1,for thr first con
 nei = zeros(num, num_k); % record nei index
 dist = zeros(num, num_k); % record nei distance
 min_ther = 2;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% ³õ´ÎÉ¸Ñ¡ºòÑ¡ÖĞĞÄµã
-% ±éÀú£¬¶ÔÃ¿¸öµãÇók½üÁÚÒÔ¼°k½üÁÚÓëÆäµÄÆ½¾ù¾àÀë£¬´ú±íÃÜ¶È
+%% åˆæ¬¡ç­›é€‰å€™é€‰ä¸­å¿ƒç‚¹
+% éå†ï¼Œå¯¹æ¯ä¸ªç‚¹æ±‚kè¿‘é‚»ä»¥åŠkè¿‘é‚»ä¸å…¶çš„å¹³å‡è·ç¦»ï¼Œä»£è¡¨å¯†åº¦
 for i = 1:num
     [nei(i,:), dist(i,:)] = knnsearch(NS,data(i,:),'k',num_k);
     mean_dist(i,:) = mean(dist(i,:));
 end
-nei(:,1) = []; % Ïû³ı¸Ãµã±¾Éí
+nei(:,1) = []; % æ¶ˆé™¤è¯¥ç‚¹æœ¬èº«
 dist(:,1) = [];
 
-% ¶ÔÃÜ¶ÈÅÅĞò£¬´ÓÃÜ¶È´óµÄÏòÏÂ±éÀú£¬È·¶¨¾Ö²¿ÖĞĞÄ
-[mean_dist_sort, id_all_sort] = sort(mean_dist, 'ascend'); % ËùÓĞµã¸ù¾İÆ½¾ù¾àÀëÅÅĞò
+% å¯¹å¯†åº¦æ’åºï¼Œä»å¯†åº¦å¤§çš„å‘ä¸‹éå†ï¼Œç¡®å®šå±€éƒ¨ä¸­å¿ƒ
+[mean_dist_sort, id_all_sort] = sort(mean_dist, 'ascend'); % æ‰€æœ‰ç‚¹æ ¹æ®å¹³å‡è·ç¦»æ’åº
 
 center_id1 = [];
 for i = 1: num 
@@ -89,7 +89,7 @@ for i = 1: num
     same_point = intersect(nei(p1,1:find_k),center_id1);
     dist_nei = mean_dist(nei(p1,1:find_k));
    
-     % Èç¹û¸Ãµã±ÈÆğ´ó²¿·ÖÁÚ¾ÓµãµÄÃÜ¶È¶¼Ğ¡£¬Ôò²»×÷Îªcan
+     % å¦‚æœè¯¥ç‚¹æ¯”èµ·å¤§éƒ¨åˆ†é‚»å±…ç‚¹çš„å¯†åº¦éƒ½å°ï¼Œåˆ™ä¸ä½œä¸ºcan
     if isempty (same_point) && (dist_p1 <= mean(dist_nei))
         center_id1 = [center_id1 ,p1];
     end
@@ -104,27 +104,27 @@ num_can = length(center_can);
 fprintf('step 2 down: reverse select\n');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Ñ¡È¡ÖĞĞÄ
-% ¼ÇÂ¼Ã¿Ò»¸öcanµÄN´ÎËÑÑ°½üÁÚ
-% ¶ÔËùÓĞcan£¬Ò»Ò»Ñ°ÕÒÖØµş½üÁÚ
-% Èç¹û±éÀúÊ±ÎŞ±ê¼Ç£¬Ôò½«¸ÃµãÊÓÎªÖĞĞÄ£¬ÈôÓĞ±ê¼Ç£¬ÔòÊÓÎª·ÇÖĞĞÄ
+%% é€‰å–ä¸­å¿ƒ
+% è®°å½•æ¯ä¸€ä¸ªcançš„Næ¬¡æœå¯»è¿‘é‚»
+% å¯¹æ‰€æœ‰canï¼Œä¸€ä¸€å¯»æ‰¾é‡å è¿‘é‚»
+% å¦‚æœéå†æ—¶æ— æ ‡è®°ï¼Œåˆ™å°†è¯¥ç‚¹è§†ä¸ºä¸­å¿ƒï¼Œè‹¥æœ‰æ ‡è®°ï¼Œåˆ™è§†ä¸ºéä¸­å¿ƒ
 
 for i= 1:num_can    
     p1 = center_can(i);
     [nei_temp] = find_nei(nei, p1, max_nei, max_time);
-    nei_all{i} = nei_temp{2};% ¼ÇÂ¼Ã¿Ò»¸öcanµÄN´ÎËÑÑ°½üÁÚ
+    nei_all{i} = nei_temp{2};% è®°å½•æ¯ä¸€ä¸ªcançš„Næ¬¡æœå¯»è¿‘é‚»
     nei_1(i,:) = [p1,nei(p1,:)];
 end
 
 cl_can = zeros(num_can, 1);
 center_id = 0;
 center_temp = [];
-cl = zeros(num,1) -1; % ¼ÇÂ¼ËùÓĞcenterÊôÓÚµÄÀà
+cl = zeros(num,1) -1; % è®°å½•æ‰€æœ‰centerå±äºçš„ç±»
 center_no = [];
 
 for i= 1:num_can
    
-    p1 = i; % ´ÓÃÜ¶È×î´óµÄ¿ªÊ¼Ñ°ÕÒ
+    p1 = i; % ä»å¯†åº¦æœ€å¤§çš„å¼€å§‹å¯»æ‰¾
     dist_p1 = mean_dist(center_can(p1));
     if cl_can(p1) == 0
        center_id = center_id + 1;
@@ -201,7 +201,7 @@ end
 
 fprintf('step 3 down: select center can\n');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-%% ½«±êÇ©Á¬Ğø»¯£º1234
+%% å°†æ ‡ç­¾è¿ç»­åŒ–ï¼š1234
 NClusters = max(cl);
 id = [];
 ture_length = length(unique(cl_can));
@@ -224,7 +224,7 @@ end
 NClusters = max(cl);
 fprintf('step 4 down: select real center\n');
 
-%% »­¹Ç¼ÜµÄ¾ÛÀàÍ¼
+%% ç”»éª¨æ¶çš„èšç±»å›¾
 label = cl;
 figure
 hold on
@@ -276,9 +276,9 @@ end
 title('atom','FontSize',18.0)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% ·ÖÅäÊ£Óàµã
+%% åˆ†é…å‰©ä½™ç‚¹
 
-% canµÄ1´Î×î½üÁÚÖ±½Ó·ÖÅä¸øcan£¬Ê£Óàµã°´ÕÕ×î½üÁÚÔ­Ôò·ÖÅä
+% cançš„1æ¬¡æœ€è¿‘é‚»ç›´æ¥åˆ†é…ç»™canï¼Œå‰©ä½™ç‚¹æŒ‰ç…§æœ€è¿‘é‚»åŸåˆ™åˆ†é…
 for i = 1:num_can
     nei_i = [];
     p1 = center_can(i);
@@ -288,7 +288,7 @@ for i = 1:num_can
 end
 nei_num = 0;
 
-% ·ÇcanµÄÒ»´Î×î½üÁÚ£¬·ÖÅä¸øÀëÆä×î½üµÄcan£¬×î½ü¾àÀë´óµÄ²¿·Öµã¿ÉÒÔ¿¼ÂÇÉèÖÃÎªÔëÉù
+% écançš„ä¸€æ¬¡æœ€è¿‘é‚»ï¼Œåˆ†é…ç»™ç¦»å…¶æœ€è¿‘çš„canï¼Œæœ€è¿‘è·ç¦»å¤§çš„éƒ¨åˆ†ç‚¹å¯ä»¥è€ƒè™‘è®¾ç½®ä¸ºå™ªå£°
 halo_can = find(cl == -1);
 data_can = data(center_can,:);
 for i = 1:length(halo_can)
@@ -302,7 +302,7 @@ for i = 1:length(halo_can)
 end
 fprintf('step 5 down: clustering');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% »­Í¼
+%% ç”»å›¾
 label = cl;
 figure
 hold on
